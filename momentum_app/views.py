@@ -65,3 +65,11 @@ class ListNotes(APIView):
             serializer_obj.save()
             return Response(serializer_obj.data)
         return Response(serializer_obj.errors)
+
+
+class UpdateNotes(APIView):
+
+    def delete(self, request, id):
+        obj = Notes.objects.get(id=id)
+        obj.delete()
+        return Response({"response": "Note is successfully deleted"})
