@@ -32,6 +32,17 @@ class ListEtf(APIView):
         return Response(serializer_obj.data)
 
 
+class DetailEtf(APIView):
+
+    def get(self, request, name):
+        try:
+            obj = Etf.objects.get(name=name)
+            serializer_obj = EtfSerializer(obj)
+            return Response(serializer_obj.data)
+        except:
+            raise Http404
+
+
 class ListDivs(APIView):
 
     def get(self, request):

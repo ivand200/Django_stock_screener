@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from momentum_app.views import ListDJ30, ListEtf, ListDivs, ListNotes, ListSP500
+from momentum_app.views import ListDJ30, ListEtf, ListDivs, ListNotes, ListSP500, DetailEtf
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dj30/', ListDJ30.as_view()),
     path('etf/', ListEtf.as_view()),
+    path('etf/<name>', DetailEtf.as_view()),
     path('divs/', ListDivs.as_view()),
     path('notes/', ListNotes.as_view()),
     path('sp500/', ListSP500.as_view()),
