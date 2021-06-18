@@ -29,4 +29,4 @@ class DJ30Serializer(ModelSerializer):
 class NotesSerializer(ModelSerializer):
     class Meta:
         model = Notes
-        fields = ["text", "user"]
+        fields = ["id", "text", "user"]

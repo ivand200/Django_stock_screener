@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer import DJ30Serializer, EtfSerializer, DivsSerializer, NotesSerializer, SP500Serializer
 
+
 class ListSP500(APIView):
 
     def get(self, request):
@@ -23,6 +24,7 @@ class ListDJ30(APIView):
         obj = DJ30.objects.all().order_by('-avg_momentum')
         serializer_obj = DJ30Serializer(obj, many=True)
         return Response(serializer_obj.data)
+
 
 class ListEtf(APIView):
 
