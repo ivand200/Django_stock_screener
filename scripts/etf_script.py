@@ -8,7 +8,8 @@ def run():
         "IVV": "SP500",
         "DIA": "DJ30",
         "SHV": "Short treasury",
-        "LQD": "Corporate bonds"
+        "LQD": "Corporate bonds",
+        "HYG": "High Yield Corporate Bond"
         }
 
     for key, val in etfs.items():

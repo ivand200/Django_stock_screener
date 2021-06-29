@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer import DJ30Serializer, EtfSerializer, DivsSerializer, NotesSerializer, SP500Serializer
-
+import os
 
 class ListSP500(APIView):
 
@@ -25,6 +25,16 @@ class ListDJ30(APIView):
         serializer_obj = DJ30Serializer(obj, many=True)
         return Response(serializer_obj.data)
 
+
+class DetailDJ30(APIView):
+
+    def get(self, request, symbol):
+        try:
+            obj = DJ30.objects.get(symbol=symbol)
+            serializer_obj = DJ30Serializer(obj)
+            return Response(serializer_obj.data)
+        except:
+            raise Http404
 
 class ListEtf(APIView):
 
@@ -75,3 +85,42 @@ class UpdateNotes(APIView):
         obj = Notes.objects.get(id=id)
         obj.delete()
         return Response({"response": "Note is successfully deleted"})
+
+
+class Updatedj30(APIView):
+
+    def post(self, request):
+        if request:
+            os.system("python manage.py runscript dj30_script")
+            return Response({"response": "dj30 was updated"})
+        else:
+            return Response({"response": "Something wrong!"})
+
+class Updatesp500(APIView):
+
+    def post(self, request):
+        if request:
+            os.system("python manage.py runscript sp500_script")
+            return Response({"response": "sp500 index was updated"})
+        else:
+            return Response({"response": "Something wrong!"})
+
+
+class Updatedivs(APIView):
+
+    def post(self, request):
+        if request:
+            os.system("python manage.py runscript divs_script")
+            return Response({"response": "dividend index was updated"})
+        else:
+            return Response({"response": "Something wrong!"})
+
+
+class Updateetf(APIView):
+
+    def post(self, request):
+        if request:
+            os.system("python manage.py runscript etf_script")
+            return Response({"response": "dividend index was updated"})
+        else:
+            return Response({"response": "Something wrong!"})
