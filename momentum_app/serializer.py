@@ -5,7 +5,7 @@ from .models import DJ30, Etf, Divs, Notes, SP500
 class SP500Serializer(ModelSerializer):
     class Meta:
         model = SP500
-        fields = ["symbol", "name", "avg_momentum", "ep"]
+        fields = ["symbol", "name", "avg_momentum", "momentum_12_2", "ep"]
 
 
 class EtfSerializer(ModelSerializer):
@@ -23,7 +23,7 @@ class DivsSerializer(ModelSerializer):
 class DJ30Serializer(ModelSerializer):
     class Meta:
         model = DJ30
-        fields = ["symbol", "name", "avg_momentum", "ep"]
+        fields = ["symbol", "name", "avg_momentum", "momentum_12_2", "ep"]
 
 
 class NotesSerializer(ModelSerializer):
