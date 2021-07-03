@@ -6,6 +6,7 @@ class SP500(models.Model):
     symbol = models.CharField(max_length=10)
     name = models.CharField(max_length=20)
     avg_momentum = models.FloatField()
+    momentum_12_2 = models.FloatField()
     ep = models.FloatField()
 
 
@@ -14,6 +15,7 @@ class DJ30(models.Model):
     symbol = models.CharField(max_length=10)
     name = models.CharField(max_length=20)
     avg_momentum = models.FloatField()
+    momentum_12_2 = models.FloatField()
     ep = models.FloatField()
 
 

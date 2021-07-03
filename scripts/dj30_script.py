@@ -15,7 +15,9 @@ def run():
             symbol = row[1]
             name = row[0]
             mom = defs.get_avg_momentum(row[1])
+            mom_12_2 = defs.get_momentum_12_2(row[1])
             ep = defs.get_ep(row[1])
 
-            d = DJ30(symbol=symbol, name=name, avg_momentum=mom, ep=ep)
+            d = DJ30(symbol=symbol, name=name, avg_momentum=mom,
+                momentum_12_2=mom_12_2, ep=ep)
             d.save()

@@ -13,7 +13,9 @@ def run():
         symbol = item["Symbol"]
         name = item["Name"]
         momentum = defs.get_avg_momentum(item["Symbol"])
+        mom_12_2 = defs.get_momentum_12_2(item["Symbol"])
         ep = defs.get_ep(item["Symbol"])
 
-        s = SP500(symbol=symbol, name=name, avg_momentum=momentum, ep=ep)
+        s = SP500(symbol=symbol, name=name, avg_momentum=momentum,
+            momentum_12_2=mom_12_2, ep=ep)
         s.save()

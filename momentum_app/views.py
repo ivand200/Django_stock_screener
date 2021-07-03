@@ -13,7 +13,7 @@ import os
 class ListSP500(APIView):
 
     def get(self, request):
-        obj = SP500.objects.all().order_by('-avg_momentum')
+        obj = SP500.objects.all().order_by('-momentum_12_2')
         serializer_obj = SP500Serializer(obj, many=True)
         return Response(serializer_obj.data)
 
@@ -21,7 +21,7 @@ class ListSP500(APIView):
 class ListDJ30(APIView):
 
     def get(self, request):
-        obj = DJ30.objects.all().order_by('-avg_momentum')
+        obj = DJ30.objects.all().order_by('-momentum_12_2')
         serializer_obj = DJ30Serializer(obj, many=True)
         return Response(serializer_obj.data)
 
