@@ -39,6 +39,14 @@ def average_income(ticker):
         return (year1 + year2 + year3 + year4) / 4
 
 
+def get_close(share):
+    try:
+        url = requests.get(f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{share}?modules=price").json()
+        return (url["quoteSummary"]["result"][0]["price"]["regularMarketPreviousClose"]["raw"])
+    except:
+        return 0
+
+
 def get_close_price(share):
     """Last close price"""
     try:
@@ -53,7 +61,7 @@ def get_ep(share):
     """E/P"""
     try:
         e_p = round(((average_income(share) / shares_outstanding(share))
-                      / get_close_price(share)), 2)
+                      / get_close(share)), 2)
     except:
         return 0
     else:
