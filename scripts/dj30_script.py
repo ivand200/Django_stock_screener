@@ -1,7 +1,6 @@
 from momentum_app.models import DJ30
 
 import csv
-import json
 from scripts import defs
 
 
@@ -20,5 +19,5 @@ def run():
             low = defs.get_low_range(row[1])
 
             d = DJ30(symbol=symbol, name=name, avg_momentum=mom,
-                momentum_12_2=mom_12_2, ep=ep, low_range=low)
+                     momentum_12_2=mom_12_2, ep=ep, low_range=low)
             d.save()

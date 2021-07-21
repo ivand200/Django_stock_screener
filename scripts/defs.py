@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import json
 import requests
+import urllib.request, urllib.parse, urllib.error
+
 
 # Define previous month
 now = datetime.now()
@@ -16,52 +18,50 @@ start_ = now - timedelta(weeks=120)
 start_time = start_.strftime("%Y-%m-%d")
 
 
-def shares_outstanding(ticker):
-    """Get shares outstanding"""
-    try:
-        url = requests.get(f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=defaultKeyStatistics").json()
-        return (url["quoteSummary"]["result"][0]["defaultKeyStatistics"]["sharesOutstanding"]["raw"])
-    except:
-        return 0
-
-
 def average_income(ticker):
     """Average income for last 4 years"""
     try:
-        url = requests.get(f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=incomeStatementHistory").json()
-        year1 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][0]["netIncome"]["raw"])
-        year2 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][1]["netIncome"]["raw"])
-        year3 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][2]["netIncome"]["raw"])
-        year4 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][3]["netIncome"]["raw"])
+        url = (f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=incomeStatementHistory")
+        fhand = urllib.request.urlopen(url).read()
+        data = json.loads(fhand)
+        year1 = (data["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][0]["netIncome"]["raw"])
+        year2 = (data["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][1]["netIncome"]["raw"])
+        year3 = (data["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][2]["netIncome"]["raw"])
+        year4 = (data["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][3]["netIncome"]["raw"])
     except:
         return 0
     else:
         return (year1 + year2 + year3 + year4) / 4
 
 
-def get_close(share):
+def shares_outstanding(ticker):
+    """Get shares outstanding"""
     try:
-        url = requests.get(f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{share}?modules=price").json()
-        return (url["quoteSummary"]["result"][0]["price"]["regularMarketPreviousClose"]["raw"])
+        url = (f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=defaultKeyStatistics")
+        fhand = urllib.request.urlopen(url).read()
+        data = json.loads(fhand)
+        return (data["quoteSummary"]["result"][0]["defaultKeyStatistics"]["sharesOutstanding"]["raw"])
     except:
         return 0
 
 
-def get_close_price(share):
-    """Last close price"""
+
+def get_close(ticker):
+    """Get last close price"""
     try:
-        ticker = si.get_quote_table(share)['Previous Close']
+        url = (f"https://query1.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=price")
+        fhand = urllib.request.urlopen(url).read()
+        data = json.loads(fhand)
+        return (data["quoteSummary"]["result"][0]["price"]["regularMarketPreviousClose"]["raw"])
     except:
         return 0
-    else:
-        return ticker
+
 
 
 def get_ep(share):
-    """E/P"""
     try:
-        e_p = round(((average_income(share) / shares_outstanding(share))
-                      / get_close(share)), 2)
+        e_p = round((average_income(share) / shares_outstanding(share))
+                      / get_close(share), 2)
     except:
         return 0
     else:
@@ -139,7 +139,7 @@ def get_div(share):
 
 
 def get_avg_momentum(share):
-    """Get AVG Momentum(12, 6, 3)"""
+    """Get AVG Momentum(12, 6, 3) months"""
     try:
         ticker = yf.Ticker(share)
         ticker = ticker.history(start=start_time, end=month_ago, interval="1mo")
@@ -147,14 +147,14 @@ def get_avg_momentum(share):
         ticker['Close0'] = ticker['Close'].shift(12)
         ticker['Close1'] = ticker['Close'].shift(6)
         ticker['Close2'] = ticker['Close'].shift(3)
-        ticker['Mom_0'] = ((ticker['Close'] / ticker['Close0']) - 1) * 0.33
-        ticker['Mom_1'] = ((ticker['Close'] / ticker['Close1']) - 1) * 0.33
-        ticker['Mom_2'] = ((ticker['Close'] / ticker['Close2']) - 1) * 0.33
-        ticker['Avg_Mom'] = ticker['Mom_0'] + ticker['Mom_1'] + ticker['Mom_2']
+        ticker['Mom_0'] = ((ticker['Close'] / ticker['Close0']) - 1)
+        ticker['Mom_1'] = ((ticker['Close'] / ticker['Close1']) - 1)
+        ticker['Mom_2'] = ((ticker['Close'] / ticker['Close2']) - 1)
+        ticker['Avg_Mom'] = (ticker['Mom_0'] + ticker['Mom_1'] + ticker['Mom_2']) / 3
     except:
         return 0
     else:
-        return round(ticker['Avg_Mom'][-1], 2)
+        return ticker['Avg_Mom'][-1].round(2)
 
 
 def get_low_range(share):
@@ -165,3 +165,36 @@ def get_low_range(share):
     ticker_low = ticker["Close"][-60:].min().round(2)
     ticker_i = [1 if ticker["Close"][-1] <= ticker_low * 1.2 else 0]
     return ticker_i[0]
+
+
+"""
+def shares_outstanding(ticker):
+    try:
+        url = requests.get(f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=defaultKeyStatistics").json()
+        return (url["quoteSummary"]["result"][0]["defaultKeyStatistics"]["sharesOutstanding"]["raw"])
+    except:
+        return 0
+"""
+
+"""
+def average_income(ticker):
+    try:
+        url = requests.get(f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/{ticker}?modules=incomeStatementHistory").json()
+        year1 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][0]["netIncome"]["raw"])
+        year2 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][1]["netIncome"]["raw"])
+        year3 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][2]["netIncome"]["raw"])
+        year4 = (url["quoteSummary"]["result"][0]["incomeStatementHistory"]["incomeStatementHistory"][3]["netIncome"]["raw"])
+    except:
+        return 0
+    else:
+        return (year1 + year2 + year3 + year4) / 4
+"""
+"""
+def get_close_price(share):
+    try:
+        ticker = si.get_quote_table(share)['Previous Close']
+    except:
+        return 0
+    else:
+        return ticker
+"""
