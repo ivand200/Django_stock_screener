@@ -129,7 +129,7 @@ def get_div(share):
     """Dividend average for last 5 years / last close price"""
     try:
         div = si.get_dividends(share)[-20:].mean()
-        div_income = (div * 4) / get_close_price(share)
+        div_income = (div * 4) / get_close(share)
         if  len(div_income) < 1:
             div_income = 0
     except:
