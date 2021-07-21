@@ -8,6 +8,7 @@ class SP500(models.Model):
     avg_momentum = models.FloatField()
     momentum_12_2 = models.FloatField()
     ep = models.FloatField()
+    low_range = models.IntegerField()
 
 
 class DJ30(models.Model):
@@ -17,6 +18,7 @@ class DJ30(models.Model):
     avg_momentum = models.FloatField()
     momentum_12_2 = models.FloatField()
     ep = models.FloatField()
+    low_range = models.IntegerField()
 
 
 class Divs(models.Model):

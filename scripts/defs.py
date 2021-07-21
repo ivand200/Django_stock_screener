@@ -155,3 +155,13 @@ def get_avg_momentum(share):
         return 0
     else:
         return round(ticker['Avg_Mom'][-1], 2)
+
+
+def get_low_range(share):
+    """Get 1 if price at 5th year low range, else 0"""
+    ticker = yf.Ticker(share)
+    ticker = ticker.history(start=start_time, end=month_ago, interval="1mo")
+    ticker = ticker[ticker["Close"].notna()]
+    ticker_low = ticker["Close"][-60:].min().round(2)
+    ticker_i = [1 if ticker["Close"][-1] <= ticker_low * 1.2 else 0]
+    return ticker_i[0]
