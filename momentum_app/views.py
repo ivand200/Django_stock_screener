@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from .serializer import DJ30Serializer, EtfSerializer, DivsSerializer, NotesSerializer, SP500Serializer
 import os
 
-class ListSP500(APIView):
+
+class Momentum2SP500(APIView):
 
     def get(self, request):
         obj = SP500.objects.all().order_by('-momentum_12_2')
@@ -18,10 +19,27 @@ class ListSP500(APIView):
         return Response(serializer_obj.data)
 
 
-class ListDJ30(APIView):
+class EpSP500(APIView):
+
+    def get(self, request):
+        obj = SP500.objects.all().order_by('-ep')
+        serializer_obj = SP500Serializer(obj, many=True)
+        return Response(serializer_obj.data)
+
+
+
+class Momentum2DJ30(APIView):
 
     def get(self, request):
         obj = DJ30.objects.all().order_by('-momentum_12_2')
+        serializer_obj = DJ30Serializer(obj, many=True)
+        return Response(serializer_obj.data)
+
+
+class EpDJ30(APIView):
+
+    def get(self, request):
+        obj = DJ30.objects.all().order_by('-ep')
         serializer_obj = DJ30Serializer(obj, many=True)
         return Response(serializer_obj.data)
 
@@ -32,6 +50,17 @@ class DetailDJ30(APIView):
         try:
             obj = DJ30.objects.get(symbol=symbol)
             serializer_obj = DJ30Serializer(obj)
+            return Response(serializer_obj.data)
+        except:
+            raise Http404
+
+
+class DetailSP500(APIView):
+
+    def get(self, request, symbol):
+        try:
+            obj = SP500.objects.get(symbol=symbol)
+            serializer_obj = SP500Serializer(obj)
             return Response(serializer_obj.data)
         except:
             raise Http404

@@ -8,6 +8,12 @@ class SP500Serializer(ModelSerializer):
         fields = ["symbol", "name", "avg_momentum", "momentum_12_2", "ep", "low_range"]
 
 
+class DJ30Serializer(ModelSerializer):
+    class Meta:
+        model = DJ30
+        fields = ["symbol", "name", "avg_momentum", "momentum_12_2", "ep", "low_range"]
+
+
 class EtfSerializer(ModelSerializer):
     class Meta:
         model = Etf
@@ -18,12 +24,6 @@ class DivsSerializer(ModelSerializer):
     class Meta:
         model = Divs
         fields = ["symbol", "name", "div_p"]
-
-
-class DJ30Serializer(ModelSerializer):
-    class Meta:
-        model = DJ30
-        fields = ["symbol", "name", "avg_momentum", "momentum_12_2", "ep", "low_range"]
 
 
 class NotesSerializer(ModelSerializer):
